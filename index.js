@@ -4,7 +4,6 @@ import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
 import QuoteRepo from './QuoteRepo.js';
-import { PubSubClient } from '@twurple/pubsub';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 
@@ -144,17 +143,6 @@ async function main() {
 	const chatClient = new ChatClient({ authProvider, channels, webSocket: true });
 	await chatClient.connect();
 	console.log("Connected to chat successfully!");
-
-	const pubsubClient = new PubSubClient();
-	Promise.all(channels.map(async channel => {
-		await pubsubClient.registerUserListener(authProvider, channel);
-		await pubsubClient.onRedemption(channel, (message) => {
-			console.log(message.rewardTitle);
-			if (message.rewardTitle.toLowerCase() === 'first') {
-				chatClient.say(channel, `!addpoints ${message.userDisplayName} 1000`);
-			}
-		})
-	})).then(() => console.log("Connected to PubSub client!"));
 
 	chatClient.onMessage(async (channel, user, text, msg) => {
 		//console.log(text)
