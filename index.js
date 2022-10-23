@@ -4,6 +4,7 @@ import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
 import QuoteRepo from './QuoteRepo.js';
+import { RedeemWatcher } from './RedeemWatcher.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 
@@ -142,7 +143,19 @@ async function main() {
 
 	const chatClient = new ChatClient({ authProvider, channels, webSocket: true });
 	await chatClient.connect();
+
+	// chatClient.onRegister(()=> {
+	// 	chatClient.say('serboggit', "Hi Iskaral");
+	// })
+
 	console.log("Connected to chat successfully!");
+
+	const hardCodedChannel = 'serboggit'
+	new RedeemWatcher(hardCodedChannel).addRedeemListener((user, redeemInfo) => {
+		if (redeemInfo.redeemTitle.toLowerCase() === 'first') {
+			chatClient.say(hardCodedChannel, `!addpoints ${user} 1000`);
+		}
+	})
 
 	chatClient.onMessage(async (channel, user, text, msg) => {
 		//console.log(text)
@@ -153,8 +166,6 @@ async function main() {
 			}
 		}
 	});
-
-
 }
 
 main();
