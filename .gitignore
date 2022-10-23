@@ -2,3 +2,4 @@
 quotes.*
 tokens.json
 .env
+/storage

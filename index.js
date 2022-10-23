@@ -5,13 +5,20 @@ import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
 import QuoteRepo from './QuoteRepo.js';
 import { RedeemWatcher } from './RedeemWatcher.js';
+import path from 'path';
+import storage from 'node-persist'
+import { fileURLToPath } from 'url';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const quotePath = './quotes.json';
+const quotePath = path.join(__dirname, './quotes.json');
 const quoteRepo = new QuoteRepo(quotePath, true);
+
 const commandSymbol = '!';
 const commands = Object.create(null);
+
+const storagePath = path.join(__dirname, './storage');
 
 const channels = ['mana248', 'serboggit'];
 
@@ -125,9 +132,25 @@ async function handleQuoteCommand({ channel, user, text, msg, words }) {
 	}
 }
 
+async function handleFirst(user) {
+	const streaks = (await storage.get('streaks')) || [];
+	let streak = streaks[streaks.length - 1];
+	if (streak?.holder !== user.toLowerCase()) {
+		streak = { holder: user.toLowerCase(), count: 1 };
+		streaks.push(streak);
+	} else {
+		streak.count = streak.count + 1;
+	}
+	await storage.set('streaks', streaks);
+
+	// return `You're on a streak of ${streak.count}`;
+	return `!addpoints ${user} 1000 You're on a streak of ${streak.count}`;
+}
+
 async function main() {
 	const categories = Object.keys(await quoteRepo.getAll())
 	categories.forEach(element => { commands[element] = handleQuoteCommand });
+	await storage.init({ dir: storagePath });
 
 	const clientId = process.env.CLIENT_ID;
 	const clientSecret = process.env.CLIENT_SECRET;
@@ -144,16 +167,14 @@ async function main() {
 	const chatClient = new ChatClient({ authProvider, channels, webSocket: true });
 	await chatClient.connect();
 
-	// chatClient.onRegister(()=> {
-	// 	chatClient.say('serboggit', "Hi Iskaral");
-	// })
-
 	console.log("Connected to chat successfully!");
 
 	const hardCodedChannel = 'serboggit'
-	new RedeemWatcher(hardCodedChannel).addRedeemListener((user, redeemInfo) => {
-		if (redeemInfo.redeemTitle.toLowerCase() === 'first') {
-			chatClient.say(hardCodedChannel, `!addpoints ${user} 1000`);
+	new RedeemWatcher(hardCodedChannel).addRedeemListener(async (user, redeemInfo) => {
+		if (redeemInfo.redeemTitle.toLowerCase() === "first") {
+			// Determine streak info
+
+			chatClient.say(hardCodedChannel, await handleFirst(user));
 		}
 	})
 
