@@ -1,3 +1,4 @@
+#!node
 import * as dotenv from 'dotenv'
 dotenv.config()
 import { RefreshingAuthProvider } from '@twurple/auth';
@@ -12,13 +13,16 @@ import { fileURLToPath } from 'url';
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const tokenPath = path.join(__dirname, "./tokens.json");
+
 const quotePath = path.join(__dirname, './quotes.json');
 const quoteRepo = new QuoteRepo(quotePath, true);
+
+const storagePath = path.join(__dirname, './storage');
 
 const commandSymbol = '!';
 const commands = Object.create(null);
 
-const storagePath = path.join(__dirname, './storage');
 
 const channels = ['mana248', 'serboggit'];
 
@@ -154,12 +158,12 @@ async function main() {
 
 	const clientId = process.env.CLIENT_ID;
 	const clientSecret = process.env.CLIENT_SECRET;
-	const tokenData = JSON.parse(await fs.readFile('./tokens.json', 'UTF-8'));
+	const tokenData = JSON.parse(await fs.readFile(tokenPath, 'UTF-8'));
 	const authProvider = new RefreshingAuthProvider(
 		{
 			clientId,
 			clientSecret,
-			onRefresh: async newTokenData => await fs.writeFile('./tokens.json', JSON.stringify(newTokenData, null, 4), 'UTF-8')
+			onRefresh: async newTokenData => await fs.writeFile(tokenPath, JSON.stringify(newTokenData, null, 4), 'UTF-8')
 		},
 		tokenData
 	);

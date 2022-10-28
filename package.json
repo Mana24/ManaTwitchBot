@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+  	"manabot":"./index.js"
+  },
   "type": "module",
   "author": "Mana",
   "license": "MIT",
