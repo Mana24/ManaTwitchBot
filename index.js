@@ -1,6 +1,5 @@
 #!node
 import * as dotenv from 'dotenv'
-dotenv.config()
 import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
@@ -12,6 +11,7 @@ import { fileURLToPath } from 'url';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({path: path.join(__dirname, './.env')});
 
 const tokenPath = path.join(__dirname, "./tokens.json");
 
