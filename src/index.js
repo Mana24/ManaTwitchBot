@@ -22,7 +22,7 @@ const quoteRepo = new QuoteRepo(quotePath, true);
 const storagePath = path.join(__dirname, '../storage');
 
 const commandSymbol = '!';
-const commands = Object.create(null);
+const commands = new Map();
 
 
 const channels = ['mana248', 'serboggit'];
@@ -31,9 +31,9 @@ async function handleCommand({ channel, user, text, msg }) {
 	const words = text.trim().split(/\s+/);
 	const command = words[0].substring(commandSymbol.length).toLowerCase();
 
-	if (!commands[command]) return;
+	if (!commands.has(command)) return;
 
-	const commandHandler = commands[command];
+	const commandHandler = commands.get(command);
 	const responseToUser = await commandHandler({ channel, user, text, msg, words });
 
 	return responseToUser;
@@ -150,7 +150,7 @@ async function handleFirst(user) {
 
 async function main() {
 	const categories = Object.keys(await quoteRepo.getAll())
-	categories.forEach(element => { commands[element] = handleQuoteCommand });
+	categories.forEach(category => { commands.set(category, handleQuoteCommand) });
 	await storage.init({ dir: storagePath });
 
 	const clientId = process.env.CLIENT_ID;
