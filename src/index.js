@@ -8,27 +8,24 @@ import { RedeemWatcher } from './RedeemWatcher.js';
 import path from 'path';
 import storage from 'node-persist'
 import { fileURLToPath } from 'url';
+import { isModOrBroadcaster } from './utils.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({path: path.join(__dirname, './.env')});
+dotenv.config({path: path.join(__dirname, '../.env')});
 
-const tokenPath = path.join(__dirname, "./tokens.json");
+const tokenPath = path.join(__dirname, "../tokens.json");
 
-const quotePath = path.join(__dirname, './quotes.json');
+const quotePath = path.join(__dirname, '../quotes.json');
 const quoteRepo = new QuoteRepo(quotePath, true);
 
-const storagePath = path.join(__dirname, './storage');
+const storagePath = path.join(__dirname, '../storage');
 
 const commandSymbol = '!';
 const commands = Object.create(null);
 
 
 const channels = ['mana248', 'serboggit'];
-
-function isModOrBroadcaster(msg) {
-	return msg.userInfo.isMod || msg.userInfo.isBroadcaster;
-}
 
 async function handleCommand({ channel, user, text, msg }) {
 	const words = text.trim().split(/\s+/);
