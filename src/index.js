@@ -9,6 +9,7 @@ import path from 'path';
 import storage from 'node-persist'
 import { fileURLToPath } from 'url';
 import { isModOrBroadcaster } from './utils.js';
+import simpleCommands from './commands/simpleCommands.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -22,7 +23,7 @@ const quoteRepo = new QuoteRepo(quotePath, true);
 const storagePath = path.join(__dirname, '../storage');
 
 const commandSymbol = '!';
-const commands = new Map();
+const commands = new Map(simpleCommands); // Initialize the commands map with simple commands
 
 
 const channels = ['mana248', 'serboggit'];
@@ -151,6 +152,7 @@ async function handleFirst(user) {
 async function main() {
 	const categories = Object.keys(await quoteRepo.getAll())
 	categories.forEach(category => { commands.set(category, handleQuoteCommand) });
+	console.dir(commands);
 	await storage.init({ dir: storagePath });
 
 	const clientId = process.env.CLIENT_ID;
