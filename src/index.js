@@ -8,7 +8,7 @@ import { RedeemWatcher } from './RedeemWatcher.js';
 import path from 'path';
 import storage from 'node-persist'
 import { fileURLToPath } from 'url';
-import { isModOrBroadcaster } from './utils.js';
+import { getSecondaryCommand, isModOrBroadcaster } from './utils.js';
 import simpleCommands from './commands/simpleCommands.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
@@ -51,7 +51,7 @@ async function handleCommand({ channel, user, text, msg }) {
  */
 async function handleQuoteCommand({ channel, user, text, msg, words }) {
 	const requestedCategory = words[0].substring(commandSymbol.length).toLowerCase();
-	const secondaryCommand = words[1]?.toLowerCase();
+	const secondaryCommand = getSecondaryCommand(words);
 
 	const noQuoteMessage = (index) => `@${user}, Quote #${index} not found`;
 	const quoteMessage = (index, quote) => `@${user}, #${index}: ${quote}`;
@@ -152,7 +152,7 @@ async function handleFirst(user) {
 async function main() {
 	const categories = Object.keys(await quoteRepo.getAll())
 	categories.forEach(category => { commands.set(category, handleQuoteCommand) });
-	console.dir(commands);
+	
 	await storage.init({ dir: storagePath });
 
 	const clientId = process.env.CLIENT_ID;
