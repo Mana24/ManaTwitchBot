@@ -64,6 +64,7 @@ export class RedeemWatcher {
    }
 
    triggerRedeemObserved(user, redeemInfo) {
+      console.info(`${user} redeemed '${redeemInfo.redeemTitle}'`);
       for (const callback of this.callbacks) {
          callback(user, redeemInfo);
       }
