@@ -10,10 +10,11 @@ import storage from 'node-persist'
 import { fileURLToPath } from 'url';
 import { getSecondaryCommand, isModOrBroadcaster } from './utils.js';
 import simpleCommands from './commands/simpleCommands.js';
+import streakCommands, { getCurrentStreak } from './commands/streakCommands.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({path: path.join(__dirname, '../.env')});
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const tokenPath = path.join(__dirname, "../tokens.json");
 
@@ -23,8 +24,8 @@ const quoteRepo = new QuoteRepo(quotePath, true);
 const storagePath = path.join(__dirname, '../storage');
 
 const commandSymbol = '!';
-const commands = new Map(simpleCommands); // Initialize the commands map with simple commands
 
+const commands = new Map(simpleCommands.concat(streakCommands)); // Initialize the commands map with simple commands
 
 const channels = ['mana248', 'serboggit'];
 
@@ -135,8 +136,7 @@ async function handleQuoteCommand({ channel, user, text, msg, words }) {
 }
 
 async function handleFirst(user) {
-	const streaks = (await storage.get('streaks')) || [];
-	let streak = streaks[streaks.length - 1];
+	let streak = await getCurrentStreak();
 	if (streak?.holder !== user.toLowerCase()) {
 		streak = { holder: user.toLowerCase(), count: 1 };
 		streaks.push(streak);
@@ -152,7 +152,7 @@ async function handleFirst(user) {
 async function main() {
 	const categories = Object.keys(await quoteRepo.getAll())
 	categories.forEach(category => { commands.set(category, handleQuoteCommand) });
-	
+
 	await storage.init({ dir: storagePath });
 
 	const clientId = process.env.CLIENT_ID;
