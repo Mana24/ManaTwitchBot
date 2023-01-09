@@ -24,7 +24,6 @@ const quoteRepo = new QuoteRepo(quotePath, true);
 const storagePath = path.join(__dirname, '../storage');
 
 const commandSymbol = '!';
-
 const commands = new Map(simpleCommands.concat(streakCommands)); // Initialize the commands map with simple commands
 
 const channels = ['mana248', 'serboggit'];
