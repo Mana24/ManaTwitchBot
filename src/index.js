@@ -10,7 +10,7 @@ import storage from 'node-persist'
 import { fileURLToPath } from 'url';
 import { getSecondaryCommand, isModOrBroadcaster } from './utils.js';
 import simpleCommands from './commands/simpleCommands.js';
-import streakCommands, { getCurrentStreak } from './commands/streakCommands.js';
+import streakCommands, { getCurrentStreak, getStreaks } from './commands/streakCommands.js';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -135,6 +135,7 @@ async function handleQuoteCommand({ channel, user, text, msg, words }) {
 }
 
 async function handleFirst(user) {
+	let streaks = await getStreaks();
 	let streak = await getCurrentStreak();
 	if (streak?.holder !== user.toLowerCase()) {
 		streak = { holder: user.toLowerCase(), count: 1 };
