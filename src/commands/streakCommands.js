@@ -23,8 +23,8 @@ async function handleLongestStreakCommand({ user, words }) {
    let streak;
    if (secondaryUsername) {
       streak = await getLongestUserStreak(secondaryUsername);
-      if (streak) return `@${user}, The longest streak held by ${secondaryUsername} was ${streak.count} firsts in a row`
-      else return `@${user}, No streak held by ${secondaryUsername} was found`;
+      if (streak) return `@${user}, The longest FIRST streak held by ${secondaryUsername} was ${streak.count} firsts in a row`
+      else return `@${user}, No FIRST streak held by ${secondaryUsername} was found`;
    }
    else {
       streak = await getLongestStreak();
