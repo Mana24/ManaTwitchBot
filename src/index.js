@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import { getSecondaryCommand, isModOrBroadcaster } from './utils.js';
 import simpleCommands from './commands/simpleCommands.js';
 import streakCommands, { getStreaks } from './commands/streakCommands.js';
+import { ApiClient } from '@twurple/api';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,14 +29,14 @@ const commands = new Map(simpleCommands.concat(streakCommands)); // Initialize t
 
 const channels = ['mana248', 'serboggit'];
 
-async function handleCommand({ channel, user, text, msg }) {
+async function handleCommand({ channel, user, text, msg, isLive }) {
 	const words = text.trim().split(/\s+/);
 	const command = words[0].substring(commandSymbol.length).toLowerCase();
 
 	if (!commands.has(command)) return;
 
 	const commandHandler = commands.get(command);
-	const responseToUser = await commandHandler({ channel, user, text, msg, words });
+	const responseToUser = await commandHandler({ channel, user, text, msg, words, isLive });
 
 	return responseToUser;
 }
@@ -169,22 +170,25 @@ async function main() {
 
 	const chatClient = new ChatClient({ authProvider, channels, webSocket: true });
 	await chatClient.connect();
-
 	console.log("Connected to chat successfully!");
 
+	const apiClient = new ApiClient({authProvider});
 	const hardCodedChannel = 'serboggit'
+	
+	
 	new RedeemWatcher(hardCodedChannel).addRedeemListener(async (user, redeemInfo) => {
 		if (redeemInfo.redeemTitle.toLowerCase() === "first") {
 			// Determine streak info
-
+			
 			chatClient.say(hardCodedChannel, await handleFirst(user));
 		}
 	})
-
+	
 	chatClient.onMessage(async (channel, user, text, msg) => {
+		const isLive = async () => await apiClient.streams.getStreamByUserName(channel) ? true : false; 
 		//console.log(text)
 		if (text.startsWith(commandSymbol)) {
-			const response = await handleCommand({ channel, user, text, msg });
+			const response = await handleCommand({ channel, user, text, msg, isLive });
 			if (response) {
 				chatClient.say(channel, response);
 			}

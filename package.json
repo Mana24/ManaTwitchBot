@@ -7,19 +7,20 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-  	"manabot":"./src/index.js"
+    "manabot": "./src/index.js"
   },
   "type": "module",
   "author": "Mana",
   "license": "MIT",
   "dependencies": {
-    "@twurple/api": "^5.2.3",
+    "@twurple/api": "^5.3.4",
     "@twurple/auth": "^5.2.5",
     "@twurple/chat": "^5.2.3",
     "@twurple/pubsub": "^5.2.5",
     "dotenv": "^16.0.2",
     "node-persist": "^3.1.0",
-    "puppeteer": "^19.1.0"
+    "puppeteer": "^19.1.0",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@types/tmi.js": "^1.8.1",

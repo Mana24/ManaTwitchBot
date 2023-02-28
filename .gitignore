@@ -1,5 +1,5 @@
 /node_modules
 quotes.*
-tokens.json
+tokens.*
 .env
 /storage
