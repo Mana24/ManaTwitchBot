@@ -185,7 +185,8 @@ async function main() {
 	})
 	
 	chatClient.onMessage(async (channel, user, text, msg) => {
-		const isLive = async () => await apiClient.streams.getStreamByUserName(channel) ? true : false; 
+		// channel: #[channelname] notice the octothrope at the start
+		const isLive = async () => await apiClient.streams.getStreamByUserId(msg.channelId) ? true : false; 
 		//console.log(text)
 		if (text.startsWith(commandSymbol)) {
 			const response = await handleCommand({ channel, user, text, msg, isLive });
