@@ -27,7 +27,7 @@ const storagePath = path.join(__dirname, '../storage');
 const commandSymbol = '!';
 const commands = new Map(simpleCommands.concat(streakCommands)); // Initialize the commands map with simple commands
 
-const channels = ['mana248', 'serboggit'];
+const channels = ['serboggit'];
 
 async function handleCommand({ channel, user, text, msg, isLive }) {
 	const words = text.trim().split(/\s+/);
