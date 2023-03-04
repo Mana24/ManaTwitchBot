@@ -22,7 +22,7 @@ export async function currentTrack() {
    try {
       track = await spotifyApi.getMyCurrentPlayingTrack();
    } catch(err) {
-      if (err.body.error?.status !== 401 && err.body.error?.status !== 403) throw err;
+      if (err.body.error?.status !== 401 && err.statusCode !== 403) throw err;
       const refreshResponse = await spotifyApi.refreshAccessToken();
       spotifyApi.setAccessToken(refreshResponse.body['access_token']);
       track = await spotifyApi.getMyCurrentPlayingTrack();
