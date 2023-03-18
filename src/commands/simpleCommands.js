@@ -24,4 +24,5 @@ export default [
    ["opencockpit", ({user}) => `I'm sorry @${user}, I'm afraid I can't do that :)`],
    ["leaderboard", ({user}) => `@${user}, Check the lembit leaderboard at streamelements.com/serboggit/leaderboard`],
    ["song", Song],
+   ["icecream", () => "Ice cream and Hitless runs have a lot in common! Any% is like sweet cream, simple and quick. Vanilla represents the base game bosses, while chocolate adds DLC complexity. Strawberry is a unique challenge for SL1/BL4 runs, and Neopolitan combines it all. All Achievements is mint chocolate with chips, while Sorbet is for limited categories. Special categories are like frozen yogurt - a unique take on the classic. 🍦"]
 ]
