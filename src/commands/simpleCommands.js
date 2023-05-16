@@ -39,9 +39,9 @@ export default [
       await storage.update('preceptIndex', (preceptIndex + 1) % 57);
       return `@${user}, ${await Precept(preceptIndex)}`
    }],
-   ['resetprecepts', async (msg) => { 
+   ['resetprecepts', async ({msg}) => { 
       if(!isModOrBroadcaster(msg)) return null;
-      storage.update('preceptIndex', 0);
+      await storage.update('preceptIndex', 0);
       return "Precepts reset"
    }]
 ]
