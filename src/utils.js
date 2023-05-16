@@ -1,3 +1,9 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+
+export const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export function isModOrBroadcaster(msg) {
 	return msg.userInfo.isMod || msg.userInfo.isBroadcaster;
 }

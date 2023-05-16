@@ -7,14 +7,12 @@ import QuoteRepo from './QuoteRepo.js';
 import { RedeemWatcher } from './RedeemWatcher.js';
 import path from 'path';
 import storage from 'node-persist'
-import { fileURLToPath } from 'url';
-import { getSecondaryCommand, isModOrBroadcaster } from './utils.js';
+import { getSecondaryCommand, isModOrBroadcaster, __dirname } from './utils.js';
 import simpleCommands from './commands/simpleCommands.js';
 import streakCommands, { getStreaks } from './commands/streakCommands.js';
 import { ApiClient } from '@twurple/api';
 
 // CURRENT SCOPES: channel:moderate chat:edit chat:read channel:read:redemptions
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const tokenPath = path.join(__dirname, "../tokens.json");
