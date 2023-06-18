@@ -1,4 +1,4 @@
-import { getSecondaryCommand, removeAtSymbol, __dirname, isModOrBroadcaster } from "../utils.js";
+import { getSecondaryCommand, removeAtSymbol, __dirname, isModOrBroadcaster, debounce } from "../utils.js";
 import { currentTrack } from '../spotify.js';
 import { readFile } from "fs/promises"; 
 import storage from 'node-persist'
@@ -32,8 +32,8 @@ export default [
    ["sayhi", SayHi],
    ["opencockpit", ({user}) => `I'm sorry @${user}, I'm afraid I can't do that :)`],
    // ["leaderboard", ({user}) => `@${user}, Check the lembit leaderboard at streamelements.com/serboggit/leaderboard`],
-   ["song", Song],
-   ["icecream", () => "Ice cream and Hitless runs have a lot in common! Any% is like sweet cream, simple and quick. Vanilla represents the base game bosses, while chocolate adds DLC complexity. Strawberry is a unique challenge for SL1/BL4 runs, and Neopolitan combines it all. All Achievements is mint chocolate with chips, while Sorbet is for limited categories. Special categories are like frozen yogurt - a unique take on the classic. 🍦"],
+   ["song", debounce(Song)],
+   ["icecream", debounce(() => "Ice cream and Hitless runs have a lot in common! Any% is like sweet cream, simple and quick. Vanilla represents the base game bosses, while chocolate adds DLC complexity. Strawberry is a unique challenge for SL1/BL4 runs, and Neopolitan combines it all. All Achievements is mint chocolate with chips, while Sorbet is for limited categories. Special categories are like frozen yogurt - a unique take on the classic. 🍦")],
    ["charms", async ({user}) => {
       const preceptIndex = await storage.get('preceptIndex') || 0;
       await storage.update('preceptIndex', (preceptIndex + 1) % 57);
