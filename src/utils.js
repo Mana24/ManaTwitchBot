@@ -18,7 +18,7 @@ export function getSecondaryCommand(words) {
 }
 
 export function removeAtSymbol(word) {
-	return word.replace(/^@/g, "");
+	return word?.replace(/^@/g, "");
 }
 
 /**

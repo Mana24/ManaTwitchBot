@@ -21,6 +21,14 @@ async function Song({user, isLive}) {
    return `@${user}, The song currently playing is ${song.name} by ${song.artists[0].name}${song.artists.length > 1 ? ' and others' : ""}. You can find it here ${song.external_urls.spotify}`
 }
 
+function Vent({words}) {
+   let user = removeAtSymbol(getSecondaryCommand(words)) || ""
+   if (user) { user = '@' + user }
+
+   return `Hi ${user} - A little reminder here that we don't vent in chat to keep things comfortable for everyone. We do have a specific channel in Discord if there are things you'd like to get off your chest, and we'd appreciate if you posted there instead. Thanks for understanding! `
+
+}
+
 let preceptIndex = 0;
 async function Precept(index) {
    const precepts = JSON.parse(await readFile(path.join(__dirname, "../precepts.json")));
@@ -43,5 +51,6 @@ export default [
       if(!isModOrBroadcaster(msg)) return null;
       await storage.update('preceptIndex', 0);
       return "Precepts reset"
-   }]
+   }],
+   ['vent', debounce(Vent)]
 ]
